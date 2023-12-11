@@ -20,4 +20,21 @@ def dispatch(app_name: str):
         app = client.gencache.EnsureDispatch(app_name)
     return app
 
+def print(msg, popup=0, item=0):
+    E3.PutInfo(popup, msg, item)
+
+def warn(msg, popup=0, item=0):
+    E3.PutWarning(popup, msg, item)
+
+def error(msg, popup=0, item=0):
+    E3.PutError(popup, msg, item)
+
+def message(msg, item=0):
+    E3.PutMessage(msg, item)
+
+def verify(msg, popup=0, item=0):
+    E3.PutVerify(popup, msg, item)
+
 E3 = dispatch("CT.Application")
+
+
