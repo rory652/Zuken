@@ -36,5 +36,6 @@ def verify(msg, popup=0, item=0):
     E3.PutVerify(popup, msg, item)
 
 E3 = dispatch("CT.Application")
+Job = E3.CreateJobObject()
 
 
