@@ -7,6 +7,9 @@ from .e3 import message
 from .e3 import verify
 
 from .devices import devicesOnSheet
+from .devices import deviceFormboardId
+from .devices import tableSymbolId
+from .devices import coreIds
 from .devices import filterByDeviceCode
 from .devices import filterByDeviceAssignment
 from .devices import filterByDeviceLocation

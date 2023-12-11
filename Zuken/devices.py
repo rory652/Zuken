@@ -22,6 +22,34 @@ def devicesOnSheet(sheet: int, base=False):
 
     return devices
 
+def deviceFormboardId(device: int, sheet: int):
+    _device.SetId(device)
+    if _device.GetFormboardSheetId() == sheet:
+        return device
+
+    if _device.IsFormboard():
+        _device.SetId(_device.GetOriginalId())
+
+    for d in _device.GetFormboardIds(_)[1][1:]:
+        _device.SetId(d)
+        if _device.GetFormboardSheetId() == sheet:
+            return d
+    return 0
+
+def tableSymbolId(device, sheet):
+    _device.SetId(deviceFormboardId(device, sheet))
+    return _device.GetTableSymbolId()
+
+def coreIds(device):
+    Pin = Job.CreatePinObject()
+    _device.SetId(device)
+
+    cores = []
+    for p in _device.GetPinIds(_)[1][1:]:
+        Pin.SetId(p)
+        cores += list(Pin.GetCoreIds(_)[1][1:])
+    return cores
+
 def filterByDeviceCode(devices: list, code: str) -> list:
     def getCode(device) -> str:
         _device.SetId(device)
