@@ -15,3 +15,6 @@ from .devices import filterByDeviceAssignment
 from .devices import filterByDeviceLocation
 from .devices import filterByDeviceAttribute
 from .devices import filterByDeviceClass
+
+from .symbols import placeSymbol
+from .symbols import extractSymbolText
