@@ -23,3 +23,4 @@ from .devices import filterByDeviceClass
 
 from .symbols import placeSymbol
 from .symbols import extractSymbolText
+from .symbols import filterBySymbolName

@@ -37,3 +37,34 @@ def extractSymbolText(symbol: int, category=0, text="") -> list:
 
     _symbol.SetId(symbol)
     return list(_symbol.GetTextIds(_, category, text)[1][1:])
+
+def filterBySymbolName(symbols: list[int], name: str) -> list:
+    """
+    Filters by the symbol name, uses startswith to cast a broader net of matching symbols
+
+    Args:
+        symbols: List of symbol IDs
+        name: Symbol name to search for
+
+    Returns:
+        List of symbols whose name matches the (start of the) string
+    """
+
+    def GetName(symbol):
+        _symbol.SetId(symbol)
+        return _symbol.GetSymbolTypeName()
+
+    return [s for s in symbols if GetName(s).startswith(name)]
+
+def deleteSymbol(symbol: int) -> int:
+    """
+    Wrapper to delete symbols in one line
+
+    Args:
+        symbol: Symbol ID
+
+    Returns:
+        0 for successful deletion, symbol ID otherwise
+    """
+    _symbol.SetId(symbol)
+    return _symbol.Delete()
