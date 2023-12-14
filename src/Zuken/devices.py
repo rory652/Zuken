@@ -1,3 +1,5 @@
+import re
+
 from .e3 import Job
 from re import sub
 
@@ -74,13 +76,13 @@ def tableSymbolId(device: int, sheet: int) -> int:
     _device.SetId(deviceFormboardId(device, sheet))
     return _device.GetTableSymbolId()
 
-def coreIds(device: int) -> list:
+def coreIds(device: int, nc=False) -> list:
     """
     Gets the core IDs for all wires/cables connected to a device
 
     Args:
         device: Device ID
-
+        nc: Whether to include N/C pins (will have no cores) as 0s in the list. Default False
     Returns:
         List of cores found connected to the device
     """
@@ -90,7 +92,11 @@ def coreIds(device: int) -> list:
     cores = []
     for p in _device.GetPinIds(_)[1][1:]:
         Pin.SetId(p)
-        cores += list(Pin.GetCoreIds(_)[1][1:])
+
+        c = list(Pin.GetCoreIds(_)[1][1:])
+        if len(c) == 0 and nc:
+            cores.append(0)
+        cores += c
     return cores
 
 def filterByDeviceCode(devices: list, code: str) -> list:
@@ -133,7 +139,7 @@ def filterByDeviceLocation(devices: list, location: str) -> list:
 
     Args:
         devices: List of device IDs
-        location: Device loation to filter by
+        location: Device location to filter by
 
     Returns:
         List of devices matching the filter location
@@ -180,3 +186,38 @@ def filterByDeviceClass(devices: list, cls: str) -> list:
         List of devices matching the filter class
     """
     return filterByDeviceAttribute(devices, "Class", cls, True)
+
+def filterByDeviceRegex(devices: list, pattern: str | re.Pattern) -> list:
+    """
+    Filters a list of devices by name using a regex pattern. Function will use 're.match'
+
+    Args:
+        devices: List of device IDs
+        pattern: Regex pattern, either as a string or precompiled pattern
+
+    Returns:
+        List of devices matching the regex
+    """
+    def getName(device):
+        _device.SetId(device)
+        return _device.GetName()
+
+    if type(pattern) is str:
+        pattern = re.compile(pattern)
+    return [d for d in devices if re.match(pattern, getName(d))]
+
+def filterByComponent(devices: list, component: str) -> list:
+    """
+    Filters a list of devices based on the component name (exact match)
+
+    Args:
+        devices: List of device IDs
+        component: Component name
+
+    Returns:
+        List of devices with that component
+    """
+    def getComponent(device):
+        _device.SetId(device)
+        return _device.GetComponentName()
+    return [d for d in devices if getComponent(d) == component]
