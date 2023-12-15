@@ -1,6 +1,6 @@
-from .e3 import Job
+from .e3 import Job as _job
 
-_symbol = Job.CreateSymbolObject()
+_symbol = _job.CreateSymbolObject()
 _ = None
 
 def placeSymbol(name: str, version, sheet: int, x: float, y: float) -> int:
@@ -68,3 +68,5 @@ def deleteSymbol(symbol: int) -> int:
     """
     _symbol.SetId(symbol)
     return _symbol.Delete()
+
+__all__ = [f for f in dir() if not f.startswith("_")]

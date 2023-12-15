@@ -1,12 +1,10 @@
 import re
+from .e3 import Job as _job
 
-from .e3 import Job
-from re import sub
-
-_device = Job.CreateDeviceObject()
+_device = _job.CreateDeviceObject()
 _ = None
 
-def devicesOnSheet(sheet: int, base=False) -> list:
+def onSheet(sheet: int, base=False) -> list:
     """
     Gets Device IDs for all the devices found on the sheet.
     Found by going through each symbol and seeing if it connects to a Device.
@@ -19,7 +17,7 @@ def devicesOnSheet(sheet: int, base=False) -> list:
         List of device IDs
     """
 
-    Sheet = Job.CreateSheetObject()
+    Sheet = _job.CreateSheetObject()
     Sheet.SetId(sheet)
     base &= Sheet.IsFormboard()
 
@@ -36,7 +34,7 @@ def devicesOnSheet(sheet: int, base=False) -> list:
 
     return devices
 
-def deviceFormboardId(device: int, sheet: int) -> int:
+def formboardId(device: int, sheet: int) -> int:
     """
     Returns the device's ID on a given formboard sheet.
     Given ID can be a formboard ID, even from a different sheet.
@@ -73,7 +71,7 @@ def tableSymbolId(device: int, sheet: int) -> int:
     Returns:
         ID of the table symbol if found, 0 otherwise
     """
-    _device.SetId(deviceFormboardId(device, sheet))
+    _device.SetId(formboardId(device, sheet))
     return _device.GetTableSymbolId()
 
 def coreIds(device: int, nc=False) -> list:
@@ -86,7 +84,7 @@ def coreIds(device: int, nc=False) -> list:
     Returns:
         List of cores found connected to the device
     """
-    Pin = Job.CreatePinObject()
+    Pin = _job.CreatePinObject()
     _device.SetId(device)
 
     cores = []
@@ -99,7 +97,7 @@ def coreIds(device: int, nc=False) -> list:
         cores += c
     return cores
 
-def filterByDeviceCode(devices: list, code: str) -> list:
+def filterByCode(devices: list, code: str) -> list:
     """
     Filters a list of devices based on the device code, e.g. '-C' for connectors
 
@@ -112,11 +110,11 @@ def filterByDeviceCode(devices: list, code: str) -> list:
     """
     def getCode(device) -> str:
         _device.SetId(device)
-        return sub(r"\d", "", _device.GetName())
+        return re.sub(r"\d", "", _device.GetName())
 
     return [d for d in devices if getCode(d) == code]
 
-def filterByDeviceAssignment(devices: list, assignment: str) -> list:
+def filterByAssignment(devices: list, assignment: str) -> list:
     """
     Filters a list of devices based on the device assignment
 
@@ -133,7 +131,7 @@ def filterByDeviceAssignment(devices: list, assignment: str) -> list:
 
     return [d for d in devices if getAssignment(d) == assignment]
 
-def filterByDeviceLocation(devices: list, location: str) -> list:
+def filterByLocation(devices: list, location: str) -> list:
     """
     Filters a list of devices based on the device location
 
@@ -151,7 +149,7 @@ def filterByDeviceLocation(devices: list, location: str) -> list:
 
     return [d for d in devices if getLocation(d) == location]
 
-def filterByDeviceAttribute(devices: list, attribute: str, value: str, component=False) -> list:
+def filterByAttribute(devices: list, attribute: str, value: str, component=False) -> list:
     """
     Filters a list of devices based on the device/component attribute value
 
@@ -174,7 +172,7 @@ def filterByDeviceAttribute(devices: list, attribute: str, value: str, component
 
     return [d for d in devices if getAttribute(d) == value]
 
-def filterByDeviceClass(devices: list, cls: str) -> list:
+def filterByClass(devices: list, cls: str) -> list:
     """
     Filters a list of devices based on the device class
 
@@ -185,9 +183,9 @@ def filterByDeviceClass(devices: list, cls: str) -> list:
     Returns:
         List of devices matching the filter class
     """
-    return filterByDeviceAttribute(devices, "Class", cls, True)
+    return filterByAttribute(devices, "Class", cls, True)
 
-def filterByDeviceRegex(devices: list, pattern: str | re.Pattern) -> list:
+def filterByRegex(devices: list, pattern: str | re.Pattern) -> list:
     """
     Filters a list of devices by name using a regex pattern. Function will use 're.match'
 
@@ -221,3 +219,5 @@ def filterByComponent(devices: list, component: str) -> list:
         _device.SetId(device)
         return _device.GetComponentName()
     return [d for d in devices if getComponent(d) == component]
+
+__all__ = [f for f in dir() if not f.startswith("_") and f != 're']
