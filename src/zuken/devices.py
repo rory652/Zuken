@@ -220,4 +220,36 @@ def filterByComponent(devices: list, component: str) -> list:
         return _device.GetComponentName()
     return [d for d in devices if getComponent(d) == component]
 
+def getAssignments(devices: list[int]) -> list[str]:
+    """
+    Returns all assignments from a list of devices in a unique, sorted list
+
+    Args:
+        devices: list of devices IDs
+
+    Returns:
+        Sorted list of assignments related to those devices
+    """
+    def assignment(device: int):
+        _device.SetId(device)
+        return _device.GetAssignment()[1:]
+
+    return list(sorted({assignment(d) for d in devices}))
+
+def getLocations(devices: list[int]) -> list[str]:
+    """
+    Returns all locations from a list of devices in a unique, sorted list
+
+    Args:
+        devices: list of devices IDs
+
+    Returns:
+        Sorted list of locations related to those devices
+    """
+    def location(device: int):
+        _device.SetId(device)
+        return _device.GetLocation()[1:]
+
+    return list(sorted({location(d) for d in devices}))
+
 __all__ = [f for f in dir() if not f.startswith("_") and f != 're']
