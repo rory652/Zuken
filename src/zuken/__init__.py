@@ -4,6 +4,7 @@ Focus is on schematic/formboard development as that's what I've worked on at my 
 """
 from . import devices
 from . import symbols
+from . import sheets
 
 from .e3 import E3
 from .e3 import Job
