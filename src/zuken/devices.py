@@ -1,5 +1,5 @@
 import re
-from .e3 import Job as _job
+from .e3 import job as _job
 
 _device = _job.CreateDeviceObject()
 _ = None

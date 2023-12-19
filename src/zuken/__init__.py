@@ -6,8 +6,8 @@ from . import devices
 from . import symbols
 from . import sheets
 
-from .e3 import E3
-from .e3 import Job
+from .e3 import e3
+from .e3 import job
 from .e3 import print
 from .e3 import warn
 from .e3 import error

@@ -1,4 +1,4 @@
-from .e3 import Job as _job
+from .e3 import job as _job
 
 _sheet = _job.CreateSheetObject()
 _ = None
